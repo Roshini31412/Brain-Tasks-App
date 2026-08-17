@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo "Logging into Docker Hub"
+      - echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+  build:
+    commands:
+      - echo "Building image"
+      - docker build -t $DOCKERHUB_USERNAME/brain-tasks-app:latest .
+  post_build:
+    commands:
+      - echo "Pushing image"
+      - docker push $DOCKERHUB_USERNAME/brain-tasks-app:latest
+      - aws eks update-kubeconfig --name brain-tasks-cluster --region $AWS_REGION
+      - kubectl apply -f k8s/deployment.yaml
+      - kubectl apply -f k8s/service.yaml

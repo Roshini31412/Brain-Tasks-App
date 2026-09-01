@@ -42,8 +42,10 @@ pipeline {
     }
     stage('Verify') {
       steps {
-        sh "kubectl get pods -o wide"
-        sh "kubectl get svc ${IMAGE_NAME}-service"
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+          sh "kubectl get pods -o wide"
+          sh "kubectl get svc ${IMAGE_NAME}-service"
+        }
       }
     }
   }

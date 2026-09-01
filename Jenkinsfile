@@ -32,7 +32,7 @@ pipeline {
 
     stage('Configure kubeconfig') {
       steps {
-        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+        withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
           sh "aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION}"
         }
       }
@@ -40,16 +40,16 @@ pipeline {
 
     stage('Deploy to EKS') {
       steps {
-        sh "kubectl set image deployment/brain-tasks-app brain-tasks-app=${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} --record"
-        sh 'kubectl apply -f k8s/service.yaml'
-        sh 'kubectl rollout status deployment/brain-tasks-app --timeout=120s'
+        withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
+          sh "kubectl set image deployment/${IMAGE_NAME} ${IMAGE_NAME}=${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        }
       }
     }
 
     stage('Verify') {
       steps {
-        sh 'kubectl get pods -o wide'
-        sh 'kubectl get svc brain-tasks-app-service'
+        sh "kubectl get pods -o wide"
+        sh "kubectl get svc ${IMAGE_NAME}-service"
       }
     }
   }

@@ -3,12 +3,12 @@ kind: Deployment
 metadata:
   name: brain-tasks-app
 spec:
-  strategy:                # 👈 added here
+  strategy:                
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 0
       maxUnavailable: 1
-  replicas: 2              # 👈 comes after strategy
+  replicas: 1
   selector:
     matchLabels:
       app: brain-tasks-app

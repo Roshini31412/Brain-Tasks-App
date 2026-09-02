@@ -197,7 +197,3 @@ AWS Console → EC2 → Load Balancers, showing the load balancer with its ARN v
 CloudWatch Logs console showing EKS cluster log groups with recent entries.
 <screenshot>
 
-📄 License
-This project is provided for educational/assignment purposes.
-
-From <https://claude.ai/chat/81c99288-96c8-4c88-bccb-1880b21bf27c> 

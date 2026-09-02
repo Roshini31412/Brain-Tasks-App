@@ -13,14 +13,13 @@
 	• License
 
 🧭 Overview
-This project takes a React application from source code to a fully automated production deployment:
-GitHub push → Jenkins (build & test) → Docker image → DockerHub → Kubernetes (AWS EKS) → LoadBalancer → Live application
-                                                                          ↑
-                                                              CloudWatch (logs & monitoring)
+<img width="873" height="105" alt="image" src="https://github.com/user-attachments/assets/e2052581-9a67-44bd-819b-903f40f014ac" />
+
 
 Every push to main automatically triggers Jenkins to build a new Docker image, push it to DockerHub, and roll it out to the Kubernetes cluster — no manual steps required after the initial setup.
 
-🛠 Tech Stack
+**🛠 Tech Stack**
+
 Layer	Tool
 Application	React
 Containerization	Docker
@@ -30,17 +29,8 @@ Orchestration	Kubernetes on AWS EKS
 Monitoring	AWS CloudWatch
 
 📁 Project Structure
-Brain-Tasks-App/
-├── Dockerfile              # Multi-stage build for the React app
-├── .dockerignore
-├── .gitignore
-├── Jenkinsfile              # Declarative CI/CD pipeline
-├── k8s/
-│   ├── deployment.yaml      # Kubernetes Deployment (2 replicas)
-│   └── service.yaml         # Kubernetes LoadBalancer Service
-├── docs/
-│   └── screenshots/         # Screenshots referenced below
-└── README.md
+<img width="605" height="217" alt="image" src="https://github.com/user-attachments/assets/1f53dc3c-e3c3-465a-815f-4dd147c6a14d" />
+
 
 
 ✅ Prerequisites
@@ -163,43 +153,84 @@ LoadBalancer ARN	:(http://a84fd2b0b0d224ff6bade7608c8df2d3-1141925910.ap-south-1
 Each stage below should be documented with a screenshot proving it worked end-to-end.
 1. App Running Locally
 Browser at localhost:3000 showing the React app loaded, alongside the terminal running npm start.
-<screenshot>
-2. Docker Build Success
-Terminal showing docker build -t brain-tasks-app:latest . completing without errors.
-<screenshot>
-3. Docker Container Running
-Terminal output of docker ps showing the brain-tasks-app-test container as Up, and the browser at localhost:3000 showing the app served from the container.
-<screenshot>
-4. DockerHub Repository
-DockerHub repo page showing the pushed image tags.
-<screenshot>
-5. GitHub Repository
-The repo's main page on GitHub showing all project files.
-<screenshot>
-6. GitHub Webhook Configured
-GitHub repo → Settings → Webhooks page showing the webhook URL and a green checkmark for a successful recent delivery.
-<screenshot>
-7. Jenkins Dashboard
-Jenkins login/unlock screen and dashboard, proving the initial setup was completed.
-<screenshot>
-8. EKS Cluster Running
-Terminal output of kubectl get nodes showing node(s) in Ready status, and the AWS Console → EKS page showing the cluster status as Active.
-<screenshot>
-9. Kubernetes Deployment Applied
-Terminal output of kubectl get pods showing pods Running, and kubectl get svc brain-tasks-app-service showing TYPE: LoadBalancer with an EXTERNAL-IP.
-<screenshot>
-10. Jenkins Pipeline Build
-Jenkins pipeline job page showing a successful build in history, the stage view (Checkout → Build → Push → Deploy, all green), and the console output of a build.
-<screenshot>
-11. Auto-Trigger Proof (Real CI/CD)
-A git push in the terminal, immediately followed by Jenkins showing a new build auto-started.
-<screenshot>
-12. App Live on the Internet
-Browser showing the app loaded from the LoadBalancer's external URL.
-<screenshot>
-13. LoadBalancer ARN
-AWS Console → EC2 → Load Balancers, showing the load balancer with its ARN visible.
-<screenshot>
-14. CloudWatch Logs
-CloudWatch Logs console showing EKS cluster log groups with recent entries.
+
+<img width="837" height="325" alt="image" src="https://github.com/user-attachments/assets/252f044a-dc07-4744-a8fc-134e5f018516" />
+
+<img width="1822" height="615" alt="image" src="https://github.com/user-attachments/assets/87891156-1cc7-4419-9c5f-08e96d856aa4" />
+
+
+2. Dockerize and Test Image
+Show containerization of the app.
+<img width="1887" height="127" alt="image" src="https://github.com/user-attachments/assets/6d85d693-22f3-4559-b40d-001f35410c65" />
+
+Screenshot of docker run -p 3000:3000 with the app accessible.
+<img width="1892" height="558" alt="image" src="https://github.com/user-attachments/assets/95d8f9ee-a904-4a40-b6d2-5d8330fa501a" />
+
+
+3. Push Image to Registry
+Verify integration with Docker Hub.
+
+Screenshot of docker push output.
+<img width="928" height="298" alt="image" src="https://github.com/user-attachments/assets/c3087eb2-cf19-4556-9b00-38454a53dd21" />
+
+Screenshot of the image visible in the Docker Hub repository.
+<img width="1915" height="722" alt="image" src="https://github.com/user-attachments/assets/501f733b-e080-4ff7-8411-3eb1ff280214" />
+
+4. Kubernetes Deployment on EKS
+
+Screenshot of kubectl apply -f k8s/.
+<img width="1826" height="342" alt="image" src="https://github.com/user-attachments/assets/8c0f8268-26f6-4222-9a73-b66b7012cb84" />
+
+Screenshot of kubectl get pods showing Running status.
+<img width="935" height="272" alt="image" src="https://github.com/user-attachments/assets/e9c7817f-f89e-41c8-8ccf-2b4daf53ad48" />
+
+<img width="937" height="210" alt="image" src="https://github.com/user-attachments/assets/61612e72-448b-46e6-872f-98ed98c34f05" />
+
+Screenshot of kubectl get svc with LoadBalancer EXTERNAL-IP (e.g., http://a84fd2b0b0d224ff6bade7608c8df2d3-1141925910.ap-south-1.elb.amazonaws.com).
+<img width="1910" height="602" alt="image" src="https://github.com/user-attachments/assets/2dac9c80-6c5d-47d2-a4f4-8a7ffafea11b" />
+
+5. CI/CD Pipeline Setup
+Prove automation via Jenkins.
+
+Screenshot of Jenkins pipeline configuration or buildspec.yml.
+
+<img width="925" height="432" alt="image" src="https://github.com/user-attachments/assets/983268ff-be4c-42cf-b714-1dbac60ee699" />
+
+
+Screenshot of a successful pipeline run (Build → Push → Deploy).
+<img width="1870" height="792" alt="image" src="https://github.com/user-attachments/assets/c8222294-9947-4c1e-a3c7-2788ec49f601" />
+
+
+Screenshot of GitHub webhook trigger.
+<img width="1907" height="787" alt="image" src="https://github.com/user-attachments/assets/24bb9a64-d394-4f85-99e5-cf941b31c8cd" />
+
+
+6. Monitoring and Logs
+Show application health and logging integration.
+
+Screenshot of CloudWatch Logs or Jenkins console output.
+<img width="932" height="333" alt="image" src="https://github.com/user-attachments/assets/ce619096-2281-4d2a-9f52-2cabb6e9eab2" />
+
+Screenshot of kubectl describe pod or kubectl logs.
+<img width="937" height="173" alt="image" src="https://github.com/user-attachments/assets/7264d340-b8b9-45ba-a42c-d74644b6ab6d" />
+
+Screenshot of CloudWatch Log Groups list (integration proof).
+
+<img width="1911" height="785" alt="image" src="https://github.com/user-attachments/assets/f873a855-0eb6-49d4-b456-67bc9ec85f45" />
+<img width="1912" height="677" alt="image" src="https://github.com/user-attachments/assets/6062c071-7513-4b5f-80e6-caff2ac02d50" />
+<img width="1916" height="666" alt="image" src="https://github.com/user-attachments/assets/59842041-29ba-4f3a-a93e-26d25bb2d10a" />
+
+Screenshot of Application log stream.
+
+<img width="1902" height="552" alt="image" src="https://github.com/user-attachments/assets/486b1264-a6c5-4d8d-b327-b0d3a8135ce7" />
+
+
+Screenshot of Jenkins console log (local build/deploy proof).
+
+<img width="1847" height="632" alt="image" src="https://github.com/user-attachments/assets/ecc54400-ab76-471e-8d5a-cc03fd3a1841" />
+
+Screenshot of Cluster dashboard 
+
+
+<img width="1088" height="828" alt="image" src="https://github.com/user-attachments/assets/a3d6e873-8c2e-443e-b8d2-2c82323570af" />
 

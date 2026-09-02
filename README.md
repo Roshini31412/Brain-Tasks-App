@@ -13,6 +13,8 @@
 	• License
 
 🧭 Overview
+
+
 <img width="873" height="105" alt="image" src="https://github.com/user-attachments/assets/e2052581-9a67-44bd-819b-903f40f014ac" />
 
 
@@ -100,50 +102,6 @@ Stage	Description
 3. Push to DockerHub	Logs in and pushes the image with the build-number and latest tags
 4. Deploy to Kubernetes	Applies the manifests in k8s/ and rolls out the new image on the EKS cluster
 The pipeline is triggered automatically by a GitHub webhook on every push to main.
-pipeline {
-    agent any
-environment {
-        DOCKERHUB_CREDS = credentials('dockerhub-creds')
-        IMAGE_NAME       = "<your-dockerhub-username>/brain-tasks-app"
-        IMAGE_TAG        = "${env.BUILD_NUMBER}"
-        AWS_REGION       = "us-east-1"
-        CLUSTER_NAME     = "brain-tasks-cluster"
-    }
-stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Vennilavanguvi/Brain-Tasks-App.git'
-            }
-        }
-stage('Docker Build') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .'
-            }
-        }
-stage('Docker Push') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'
-                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
-                sh 'docker push $IMAGE_NAME:latest'
-            }
-        }
-stage('Deploy to EKS') {
-            steps {
-                withAWS(credentials: 'aws-creds', region: "${AWS_REGION}") {
-                    sh 'aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION'
-                    sh 'kubectl apply -f k8s/deployment.yaml'
-                    sh 'kubectl apply -f k8s/service.yaml'
-                    sh 'kubectl rollout status deployment/brain-tasks-app'
-                }
-            }
-        }
-    }
-post {
-        always {
-            sh 'docker logout'
-        }
-    }
-}
 
 🌐 Live Deployment
 Item	Value
